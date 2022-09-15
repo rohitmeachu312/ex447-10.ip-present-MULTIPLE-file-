@@ -1,0 +1,27 @@
+there are two files ips and ips2 .... both ahve the ips. we need to collect the ips from both files and paste them into ip.out file inside same directory path
+
+
+---
+- name: IP Address
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - files.yml
+  tasks:
+
+    - name: copy contents
+      shell: echo "{{ lookup('file',item) }}" >> rohit.txt
+      loop: "{{ files }}"
+
+    - name: copy ip
+      copy:
+        dest: ip.out
+        content: "IPADDR={{lookup('file','rohit.txt').split()|ipaddr|unique|join(',')|default('none',true)}}"     
+
+    - name: remove file
+      file:
+        path: rohit.txt
+        state: absent
+
+
+
